@@ -4,6 +4,7 @@ import bus.route.challenge.service.RouteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,13 +36,21 @@ public class DefaultRouteService implements RouteService {
     @Override
     public void addRoute(Integer rid, List<Integer> sids) {
         checkNotNull(rid, ROUNT_MANDATORY_MSG);
-        checkArgument(sids.size() > 2, MIN_ROUTES_SIZE_MSG);
+        checkArgument(sids.size() >= 2, MIN_ROUTES_SIZE_MSG);
         LOGGER.debug("Putting route {} with stations {}", rid, sids);
         routesStorage.put(rid, sids);
     }
 
     private boolean isDirectLinkRoute(int departure, int arrival, Map.Entry<Integer, List<Integer>> route) {
         List<Integer> stationIds = route.getValue();
+        //should we care about direction ?
+        // if yes, should be added next code:
+        // stationIds.indexOf(departure) < stationIds.indexOf(arrival)
+
         return stationIds.contains(departure) && stationIds.contains(arrival);
+    }
+
+    public Map<Integer, List<Integer>> getRoutesStorage() {
+        return Collections.unmodifiableMap(routesStorage);
     }
 }

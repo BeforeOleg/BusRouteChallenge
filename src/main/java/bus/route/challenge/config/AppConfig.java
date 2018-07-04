@@ -10,12 +10,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.Pollers;
+import org.springframework.integration.file.FileHeaders;
 import org.springframework.integration.file.dsl.Files;
 import org.springframework.integration.file.filters.CompositeFileListFilter;
 import org.springframework.integration.file.filters.FileListFilter;
 import org.springframework.integration.file.filters.FileSystemPersistentAcceptOnceFileListFilter;
 import org.springframework.integration.file.filters.SimplePatternFileListFilter;
 import org.springframework.integration.handler.GenericHandler;
+import org.springframework.integration.handler.LoggingHandler;
 import org.springframework.integration.metadata.SimpleMetadataStore;
 
 import java.io.File;
@@ -56,6 +58,7 @@ public class AppConfig {
                 .from(Files.inboundAdapter(new File(hotFolderPath))
                                 .filter(compositeFileListFilter),
                         e -> e.poller(Pollers.fixedDelay(1000)))
+                .log(LoggingHandler.Level.INFO, "fileLoaded", m -> m.getHeaders().get(FileHeaders.RELATIVE_PATH))
                 .handle(File.class, clearRoutesHandler)
                 .split(Files.splitter()
                         .firstLineAsHeader(ROUTES_COUNT))
