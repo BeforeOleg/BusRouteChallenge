@@ -3,7 +3,7 @@ package bus.route.challenge.config;
 import bus.route.challenge.integration.handler.ClearRoutesHandler;
 import bus.route.challenge.integration.handler.RouteMessageHandler;
 import bus.route.challenge.service.RouteService;
-import bus.route.challenge.service.impl.DefaultRouteService;
+import bus.route.challenge.service.impl.InverseRouteService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +30,7 @@ public class AppConfig {
 
     @Bean
     public RouteService routeService() {
-        return new DefaultRouteService();
+        return new InverseRouteService();
     }
 
     //  Spring integration configs
